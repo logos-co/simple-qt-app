@@ -95,21 +95,10 @@ This provides all necessary build tools (CMake, Ninja, Qt6) in an isolated envir
 
 ## Verifying DMG Self-Containment
 
-To check if your .app bundle is truly self-contained (doesn't rely on system Qt), use these commands:
-
-```bash
-# Check the main binary dependencies
-otool -L build/HelloWorld.app/Contents/MacOS/HelloWorld
-
-# Check Qt framework dependencies (should show @executable_path or @rpath)
-otool -L build/HelloWorld.app/Contents/Frameworks/QtWidgets.framework/Versions/A/QtWidgets
-
-# Check plugin dependencies
-otool -L build/HelloWorld.app/Contents/PlugIns/platforms/libqcocoa.dylib
+```
+./check-bundle-refs.sh ./build/HelloWorld-1.0.0.dmg
 ```
 
-All paths should show `@executable_path` or `@rpath` instead of absolute paths like `/usr/local/...` or `/opt/homebrew/...`.
-
-If you see absolute paths, the app won't work on other machines without Qt installed in the same location.
-
-**Most reliable for distribution:** Use `nix build '.#dmg'` which produces a fully self-contained bundle regardless of your local Qt installation.
+```
+./check-nix-refs.sh ./build/HelloWorld-1.0.0.dmg
+```
